@@ -1,0 +1,3 @@
+[submodule "lib/ocaml-abt"]
+	path = lib/ocaml-abt
+	url = https://github.com/jonsterling/ocaml-abt
