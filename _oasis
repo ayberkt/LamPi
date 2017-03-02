@@ -1,21 +1,16 @@
-OASISFormat: 0.4
-Name:        LamPi
-Version:     0.0.1
-Synopsis:    An implementation of the lambda-pi calculus.
-Authors:     Ayberk Tosun
-License:     BSD-3-clause
-
-Library abt
-  Path:       lib/ocaml-abt
-  BuildTools: ocamlbuild
-  Modules:    Signatures
-            , SimpleVariable
+OASISFormat:  0.4
+Name:         LamPi
+Version:      0.0.1
+Synopsis:     An implementation of the lambda-pi calculus.
+Authors:      Ayberk Tosun
+License:      BSD-3-clause
+BuildDepends: abt
 
 Executable lampi
-  Path:       src
-  BuildTools: ocamlbuild, camlp4
+  Path:         src
+  BuildTools:   ocamlbuild, camlp4
   BuildDepends: abt
-  MainIs:     repl.ml
+  MainIs:       repl.ml
 
 SourceRepository "LamPi"
   Type:     git
