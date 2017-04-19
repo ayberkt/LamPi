@@ -7,8 +7,4 @@ oasis:
 	ocaml setup.ml -build
 
 clean:
-	oasis setup-clean
-	rm -rf _build
-	rm -f setup.ml setup.log
-	rm myocamlbuild.ml
-	setup.log
+	ocaml setup.ml -clean

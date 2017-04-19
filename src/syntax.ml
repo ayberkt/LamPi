@@ -1,4 +1,3 @@
-#require "abt"
 open Operator
 
 type op = Ann | Star | Pi | App | Lam
@@ -30,8 +29,8 @@ module LamPiOp : (OPERATOR with type t = op) = struct
     | _ -> false
 end
 
-module Abt = Abt.MakeAbt(LamPiOp)
-module AbtUtil = Abt_util.MakeABTUtil(Abt)
+module LamPiAbt = Abt.MakeAbt(LamPiOp)
+module AbtUtil = Abt_util.MakeABTUtil(LamPiAbt)
 
 module LamPiSyntax = struct
   open AbtUtil
@@ -54,23 +53,6 @@ module LamPiSyntax = struct
     | LamV (x, tm) -> AppView (Lam, [into (AbsView (x, into tm))])
     | VarV x -> VarView x
 
-
-  (* let to_term_view t = function
-    | AppView (f, [tm1; tm2]) when f == Ann -> AnnV (tm1, tm2)
-    | AppView (f, []) when f == Star -> StarV
-    | AppView (f, [tm1]) when f == Pi ->
-        begin match out tm1 with
-        | AbsView (x, tm2) -> PiV (x, tm2)
-        | _ -> raise Malformed
-        end
-    | AppView (f, [tm1; tm2]) when f == App -> AppV (tm1, tm2)
-    | AppView (f, [tm1]) when f == Lam ->
-        begin match out tm1 with
-        | AbsView (x, tm2) -> LamV (x, tm2)
-        | _ -> raise Malformed
-        end
-    | _ -> failwith "todo"
- *)
   let phi = term_to_view StarV
   let theta =
     let foo =
