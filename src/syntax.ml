@@ -9,11 +9,11 @@ module LamPiOp : (OPERATOR with type t = op) = struct
   let arity = function
     | Ann  -> [0; 0]
     | Star -> []
-    | Pi   -> [1]
+    | Pi   -> [0; 1]
     | App  -> [0; 0]
     | Lam  -> [1]
 
-  let toString = function
+  let to_string = function
     | Ann -> "ann"
     | Star -> "star"
     | Pi -> "pi"
@@ -29,35 +29,11 @@ module LamPiOp : (OPERATOR with type t = op) = struct
     | _ -> false
 end
 
-module LamPiAbt = Abt.MakeAbt(LamPiOp)
-module AbtUtil = Abt_util.MakeABTUtil(LamPiAbt)
+module LamPiTerm = Abt.MakeAbt(LamPiOp)
+open LamPiTerm
+open Variable
 
-module LamPiSyntax = struct
-  open AbtUtil
-
-  type var = AbtUtil.Variable.t
-
-  type term_view =
-    | AnnV of t view * t view
-    | StarV
-    | PiV of var * t view
-    | AppV of t  view * t view
-    | LamV of var * t view
-    | VarV of var
-
-  let term_to_view : term_view -> AbtUtil.t view = function
-    | AnnV (tm1, tm2) -> AppView (Ann, [into tm1; into tm2])
-    | StarV -> AppView (Star, [])
-    | PiV (x, tm) -> AppView (Pi, [into (AbsView (x, into tm))])
-    | AppV (tm1, tm2) -> AppView (App, [into tm1; into tm2])
-    | LamV (x, tm) -> AppView (Lam, [into (AbsView (x, into tm))])
-    | VarV x -> VarView x
-
-  let phi = term_to_view StarV
-  let theta =
-    let foo =
-      let v = Variable.newvar "f" in (LamV (v, term_to_view (VarV v)))
-    in
-      term_to_view foo
-
-end
+let tm1 =
+  let x1 = newvar "x" in
+  let x2 = newvar "a" in
+  Ann $$ [Lam $$ [x1 ^^ (!! x1)]; Pi $$ [Star $$ []; x2 ^^ (!! x2)]]
