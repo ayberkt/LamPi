@@ -1,0 +1,22 @@
+entrypoints Program;
+
+PDecls. Program ::= [Decl];
+
+separator Decl ".";
+terminator Decl ".";
+
+TmId.     Term6 ::= Ident;
+TmZero.   Term6 ::= "Z";
+TmSet.    Term6 ::= "Set";
+TmNat.    Term6 ::= "Nat";
+TmSucc.   Term6 ::= "S" Term5 ;
+TmApp.    Term5 ::= Term5 Term4;
+TmAbs.    Term4 ::= "\\" Ident "->" Term3;
+TmArrow.  Term3 ::= Term3 "->" Term2;
+TmForall. Term2 ::= "forall" "(" Ident ":" Term2 ")" "," Term1;
+TmAnn.    Term1 ::= Term1 ":" Term;
+
+TmDecl.  Decl ::= "Definition" Ident ":" Term ":=" Term;
+
+coercions Term 6;
+comment "(*" "*)";
