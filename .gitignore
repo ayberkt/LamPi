@@ -3,3 +3,4 @@ setup.ml
 setup.log
 _build
 repl.byte
+src/parser
