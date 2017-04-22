@@ -1,0 +1,10 @@
+Definition foo : forall (A : Set) , A -> A := \ x -> x .
+
+Definition bar : forall (A : Set), A -> A := foo .
+
+Definition bar : forall (A : Set), A -> A := foo .
+
+Definition zero   : Nat := Z .
+Definition one    : Nat := S zero .
+Definition two    : Nat := S one .
+Definition three  : Nat := S two .
