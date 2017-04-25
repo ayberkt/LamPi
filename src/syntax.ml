@@ -89,6 +89,44 @@ module ParseToABT = struct
         let declToABT (TmDecl (x, tm1, tm2)) =
           termToABT [] (TmAnn (tm2, tm1)) in
         CL.map ~f:declToABT decls
+end
 
+module LamPiView = struct
+  open LamPiTerm
 
+  type term_view =
+    | AnnV of LamPiTerm.t * LamPiTerm.t
+    | NatV
+    | ZeroV
+    | SuccV of LamPiTerm.t
+    | PiV of LamPiTerm.t * Variable.t * LamPiTerm.t
+    | AppV  of LamPiTerm.t * LamPiTerm.t
+    | LamV of Variable.t * LamPiTerm.t
+
+  exception CannotConvert
+
+  let app_to_view (op, tms) =
+    match (op, tms) with
+    | Ann, [tm1; tm2] ->
+        AnnV (tm1, tm2)
+    | Nat, [] -> NatV
+    | Zero, [] -> ZeroV
+    | Succ, [tm] -> SuccV tm
+    | Pi, [tm1; tm2'] ->
+        begin match out tm2' with
+        | AbsView (x, tm2) -> PiV (tm1, x, tm2)
+        | _ -> raise CannotConvert
+        end
+    | App, [tm1; tm2] -> AppV (tm1, tm2)
+    | Lam, [tm] ->
+        begin match out tm with
+        | VarView x -> LamV (x, tm)
+        | _ -> raise CannotConvert
+        end
+    | _, _ -> raise CannotConvert
+
+  let abt_to_view (a : LamPiTerm.t) =
+    match out a with
+    | AppView (op, tms) -> app_to_view (op, tms)
+    | _ -> raise CannotConvert
 end
