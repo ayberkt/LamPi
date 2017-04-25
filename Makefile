@@ -22,7 +22,11 @@ bnfc-clean:
 
 docs:
 	mkdir docs
-	bnfc --latex src/LamPi.bnfc -o docs
+	bnfc --latex src/LamPi.bnfc -o docs;
+	lualatex --output-directory=docs docs/LamPi.tex
+
+docs-clean:
+	rm -rf docs
 
 clean:
 	ocaml setup.ml -clean
