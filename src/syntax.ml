@@ -58,7 +58,7 @@ module ParseToABT = struct
 
   exception UnboundVariable of string
 
-  let rec termToABT ctx tm =
+  let rec termToABT ctx tm : LamPiTerm.t =
     match tm with
     | TmId (Ident name) ->
         begin match find ctx name with
