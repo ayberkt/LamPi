@@ -4,3 +4,10 @@ setup.log
 _build
 repl.byte
 src/parser
+src/AbsLamPi.ml
+src/BNFC_Util.ml
+src/LexLamPi.mll
+src/ParLamPi.mly
+src/PrintLamPi.ml
+src/ShowLamPi.ml
+src/SkelLamPi.ml
