@@ -49,12 +49,12 @@ let tm1 =
 
 module ParseToABT = struct
   open AbsLamPi
-  open Core_kernel.Core_list
+  module CL = Core_kernel.Core_list
 
   type var = LamPiTerm.Variable.t
   type context = (string * var) list
 
-  open Assoc
+  open CL.Assoc
 
   exception UnboundVariable of string
 
@@ -83,4 +83,12 @@ module ParseToABT = struct
         Pi $$ [termToABT ctx tm1; x1 ^^ termToABT ctx' tm2]
     | TmAnn (tm1, tm2) ->
         Ann $$ [termToABT ctx tm1; termToABT ctx tm2]
+
+    let parse_program : program -> LamPiTerm.t list =
+      fun (PDecls decls) ->
+        let declToABT (TmDecl (x, tm1, tm2)) =
+          termToABT [] (TmAnn (tm2, tm1)) in
+        CL.map ~f:declToABT decls
+
+
 end
