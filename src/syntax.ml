@@ -1,4 +1,5 @@
 open Operator
+module CL = Core_kernel.Core_list
 
 type op = Ann | Star | Pi | App | Lam | Zero | Succ | Nat
 
@@ -29,27 +30,26 @@ module LamPiOp : (OPERATOR with type t = op) = struct
   let equal = function
     | Ann, Ann -> true
     | Star, Star -> true
+    | Pi, Pi -> true
+    | Lam, Lam -> true
+    | App, App -> true
     | Nat, Nat -> true
     | Zero, Zero -> true
     | Succ, Succ -> true
-    | Pi, Pi -> true
-    | App, App -> true
-    | Lam, Lam -> true
-    | _ -> false
+    | _, _ -> false
 end
 
 module LamPiTerm = Abt.MakeAbt(LamPiOp)
-open LamPiTerm
-open Variable
 
-let tm1 =
-  let x1 = newvar "x" in
-  let x2 = newvar "a" in
-  Ann $$ [Lam $$ [x1 ^^ (!! x1)]; Pi $$ [Star $$ []; x2 ^^ (!! x2)]]
+(* let tm1 = *)
+  (* let x1 = newvar "x" in *)
+  (* let x2 = newvar "a" in *)
+  (* Ann $$ [Lam $$ [x1 ^^ (!! x1)]; Pi $$ [Star $$ []; x2 ^^ (!! x2)]] *)
 
 module ParseToABT = struct
+  open LamPiTerm
+  open Variable
   open AbsLamPi
-  module CL = Core_kernel.Core_list
 
   type var = LamPiTerm.Variable.t
   type context = (string * var) list
@@ -86,7 +86,7 @@ module ParseToABT = struct
 
     let parse_program : program -> LamPiTerm.t list =
       fun (PDecls decls) ->
-        let declToABT (TmDecl (x, tm1, tm2)) =
+        let declToABT (TmDecl (_, tm1, tm2)) =
           termToABT [] (TmAnn (tm2, tm1)) in
         CL.map ~f:declToABT decls
 end

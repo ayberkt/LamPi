@@ -1,5 +1,5 @@
 (* OASIS_START *)
-(* DO NOT EDIT (digest: 12767af868e86bb9273247c7afc3f333) *)
+(* DO NOT EDIT (digest: e30725a15ef93df1e27ee63119c5bc37) *)
 module OASISGettext = struct
 (* # 22 "src/oasis/OASISGettext.ml" *)
 
@@ -890,11 +890,56 @@ let package_default =
      flags =
        [
           (["oasis_executable_lampi_byte"; "ocaml"; "link"; "byte"],
-            [(OASISExpr.EBool true, S [A "-w"; A "@1..60-3"])]);
+            [
+               (OASISExpr.EBool true,
+                 S
+                   [
+                      A "-w";
+                      A "@8";
+                      A "-w";
+                      A "@11";
+                      A "-w";
+                      A "@20";
+                      A "-w";
+                      A "@26";
+                      A "-w";
+                      A "+a-4-3-33"
+                   ])
+            ]);
           (["oasis_executable_lampi_byte"; "ocaml"; "ocamldep"; "byte"],
-            [(OASISExpr.EBool true, S [A "-w"; A "@1..60-3"])]);
+            [
+               (OASISExpr.EBool true,
+                 S
+                   [
+                      A "-w";
+                      A "@8";
+                      A "-w";
+                      A "@11";
+                      A "-w";
+                      A "@20";
+                      A "-w";
+                      A "@26";
+                      A "-w";
+                      A "+a-4-3-33"
+                   ])
+            ]);
           (["oasis_executable_lampi_byte"; "ocaml"; "compile"; "byte"],
-            [(OASISExpr.EBool true, S [A "-w"; A "@1..60-3"])])
+            [
+               (OASISExpr.EBool true,
+                 S
+                   [
+                      A "-w";
+                      A "@8";
+                      A "-w";
+                      A "@11";
+                      A "-w";
+                      A "@20";
+                      A "-w";
+                      A "@26";
+                      A "-w";
+                      A "+a-4-3-33"
+                   ])
+            ])
        ];
      includes = []
   }
@@ -904,6 +949,6 @@ let conf = {MyOCamlbuildFindlib.no_automatic_syntax = false}
 
 let dispatch_default = MyOCamlbuildBase.dispatch_default conf package_default;;
 
-# 908 "myocamlbuild.ml"
+# 953 "myocamlbuild.ml"
 (* OASIS_STOP *)
 Ocamlbuild_plugin.dispatch dispatch_default;;

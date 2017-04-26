@@ -3,16 +3,14 @@ open ParseToABT
 
 open Core_kernel.Core_printf
 
-open Printf
+(* open Printf *)
 open Lexing
 open Sys
-open Core_kernel.Std
+(* open Core_kernel.Std *)
 open Core_kernel.Core_list
-open ParLamPi
-open LexLamPi
-open AbsLamPi
-
-let printf = Core_kernel.Core_printf.printf;;
+(* open ParLamPi *)
+(* open LexLamPi *)
+(* open AbsLamPi *)
 
 let (color_reset, color_red, color_green, color_pink, color_bright) =
   ("\x1b[0m",
@@ -24,7 +22,7 @@ let red s =  color_red ^ s ^ color_reset;;
 let green s =  color_green ^ s ^ color_reset;;
 let pink s = color_pink ^ s ^ color_reset;;
 
-let error_msg (x : Lexing.position) (y : Lexing.position) : string =
+let error_msg (x : Lexing.position) (_ : Lexing.position) : string =
   (red "Syntax error") ^ " at line " ^ (string_of_int x.pos_lnum) ^ ".\n"
 
 
