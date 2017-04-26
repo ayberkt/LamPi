@@ -11,6 +11,7 @@ Executable lampi
   BuildTools:   ocamlbuild, camlp4
   BuildDepends: abt
   MainIs:       main.ml
+  ByteOpt:      -w @1..60-3
 
 SourceRepository "LamPi"
   Type:     git
