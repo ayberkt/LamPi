@@ -10,7 +10,7 @@ Executable lampi
   Path:         src
   BuildTools:   ocamlbuild, camlp4
   BuildDepends: abt
-  MainIs:       repl.ml
+  MainIs:       main.ml
 
 SourceRepository "LamPi"
   Type:     git
