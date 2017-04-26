@@ -56,9 +56,15 @@ let run = function
 | REPL -> repl ()
 | RunFile file_name ->
     let file = open_in file_name in
-    let abts = parse_program (parse_file file) in
-    printf "Parsing the file %s...\n\n" file_name;
-    iter ~f:print_ABT (abts)
+    let abts =
+      try parse_program (parse_file file)
+      with
+      | ParseToABT.UnboundVariable x ->
+          printf "%sError:%s Unbound value %s\n" color_red color_reset x;
+          exit 1
+    in
+      printf "Parsing the file %s...\n\n" file_name;
+      iter ~f:print_ABT (abts)
 ;;
 
 let main =
