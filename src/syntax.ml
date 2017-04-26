@@ -1,7 +1,7 @@
 open Operator
 module CL = Core_kernel.Core_list
 
-type op = Ann | Star | Pi | App | Lam | Zero | Succ | Nat
+type op = Ann | Star | Pi | App | Lam | Zero | Succ | Nat | Let
 
 module LamPiOp : (OPERATOR with type t = op) = struct
 
@@ -16,6 +16,7 @@ module LamPiOp : (OPERATOR with type t = op) = struct
     | Pi   -> [0; 1]
     | App  -> [0; 0]
     | Lam  -> [1]
+    | Let  -> [0; 1]
 
   let to_string = function
     | Ann -> "ann"
@@ -26,6 +27,7 @@ module LamPiOp : (OPERATOR with type t = op) = struct
     | Pi -> "pi"
     | App -> "app"
     | Lam -> "lam"
+    | Let -> "let"
 
   let equal = function
     | Ann, Ann -> true
@@ -36,6 +38,7 @@ module LamPiOp : (OPERATOR with type t = op) = struct
     | Nat, Nat -> true
     | Zero, Zero -> true
     | Succ, Succ -> true
+    | Let, Let -> true
     | _, _ -> false
 end
 
@@ -95,13 +98,14 @@ module LamPiView = struct
   open LamPiTerm
 
   type term_view =
-    | AnnV of LamPiTerm.t * LamPiTerm.t
     | NatV
     | ZeroV
+    | AnnV of LamPiTerm.t * LamPiTerm.t
     | SuccV of LamPiTerm.t
     | PiV of LamPiTerm.t * Variable.t * LamPiTerm.t
-    | AppV  of LamPiTerm.t * LamPiTerm.t
+    | AppV of LamPiTerm.t * LamPiTerm.t
     | LamV of Variable.t * LamPiTerm.t
+    | LetV of Variable.t * LamPiTerm.t * LamPiTerm.t
 
   exception CannotConvert
 
@@ -123,6 +127,7 @@ module LamPiView = struct
         | VarView x -> LamV (x, tm)
         | _ -> raise CannotConvert
         end
+    | Let, xs -> failwith "TODO"
     | _, _ -> raise CannotConvert
 
   let abt_to_view (a : LamPiTerm.t) =
