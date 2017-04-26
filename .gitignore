@@ -6,7 +6,7 @@ setup.data
 setup.ml
 setup.log
 _build
-repl.byte
+*.byte
 src/parser
 src/AbsLamPi.ml
 src/BNFC_Util.ml
