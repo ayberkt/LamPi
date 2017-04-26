@@ -2,8 +2,7 @@ entrypoints Program;
 
 PDecls. Program ::= [Decl];
 
-separator Decl ".";
-terminator Decl ".";
+separator Decl ";";
 
 TmId.     Term6 ::= Ident;
 TmZero.   Term6 ::= "Z";
