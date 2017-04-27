@@ -9,7 +9,7 @@ BuildDepends: abt
 Executable lampi
   Path:         src
   BuildTools:   ocamlbuild, camlp4
-  BuildDepends: abt
+  BuildDepends: abt (>= 0.0.3)
   MainIs:       main.ml
   ByteOpt:      -w @8 -w @11 -w @20 -w @26 -w @27 -w +a-4-3-33 -color always
 
