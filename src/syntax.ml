@@ -104,6 +104,7 @@ module LamPiView = struct
   type term_view =
     | NatV
     | ZeroV
+    | StarV
     | AnnV of LamPiTerm.t * LamPiTerm.t
     | SuccV of LamPiTerm.t
     | PiV of LamPiTerm.t * Variable.t * LamPiTerm.t
@@ -119,6 +120,7 @@ module LamPiView = struct
         AnnV (tm1, tm2)
     | Nat, [] -> NatV
     | Zero, [] -> ZeroV
+    | Star, [] -> StarV
     | Succ, [tm] -> SuccV tm
     | Pi, [tm1; tm2'] ->
         begin match out tm2' with
