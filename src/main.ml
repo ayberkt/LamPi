@@ -1,5 +1,6 @@
 open Syntax
 open ParseToABT
+open Typecheck
 
 open Core_kernel.Core_printf
 

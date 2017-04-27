@@ -107,7 +107,7 @@ module LamPiView = struct
     | StarV
     | AnnV of LamPiTerm.t * LamPiTerm.t
     | SuccV of LamPiTerm.t
-    | PiV of LamPiTerm.t * Variable.t * LamPiTerm.t
+    | PiV of Variable.t * LamPiTerm.t * LamPiTerm.t
     | AppV of LamPiTerm.t * LamPiTerm.t
     | LamV of Variable.t * LamPiTerm.t
     | LetV of Variable.t * LamPiTerm.t * LamPiTerm.t
@@ -124,7 +124,7 @@ module LamPiView = struct
     | Succ, [tm] -> SuccV tm
     | Pi, [tm1; tm2'] ->
         begin match out tm2' with
-        | AbsView (x, tm2) -> PiV (tm1, x, tm2)
+        | AbsView (x, tm2) -> PiV (x, tm1, tm2)
         | _ -> raise CannotConvert
         end
     | App, [tm1; tm2] -> AppV (tm1, tm2)

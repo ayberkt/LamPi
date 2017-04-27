@@ -1,9 +1,9 @@
 open Syntax
+open LamPiTerm
 open LamPiView
 module CL = Core_kernel.Core_list
 
 module Typechecker = struct
-
   type term    = LamPiTerm.t
   type var     = Syntax.LamPiTerm.Variable.t
   type context = (var, term) CL.Assoc.t
@@ -19,15 +19,40 @@ module Typechecker = struct
       match abt_to_view tm with
       | NatV  -> true
       | StarV -> true
-      | PiV (tm1, x, tm2) ->
+      | PiV (x, tm1, tm2) ->
           is_type ctx tm1 && is_type (update ctx x tm1) tm2
       | _ -> false
 
-  let check ctx tm1 tm2 =
+
+  exception UnboundVariable
+
+  let get_typ ctx x =
+    match find ctx x with
+      | Some t -> t
+      | None -> raise UnboundVariable
+
+  exception TypeError
+
+  let rec check _ tm1 tm2 : bool =
     match (abt_to_view tm1, abt_to_view tm2) with
-    | LamV (x, tm1'), PiV (dom, y, tm2') -> failwith "Typecheck TODO"
-    | AppV (fn, arg), tm2' -> failwith "Typecheck TODO"
+    (* | LamV (x, tm1'), PiV (dom, y, tm2') -> failwith "Typecheck TODO" *)
+    (* | AppV (fn, arg), tm2' -> failwith "Typecheck TODO" *)
     | _ -> failwith "Typecheck TODO"
+  and infer ctx tm =
+    match abt_to_view tm with
+    | ZeroV -> Nat $$ []
+    | SuccV tm' ->
+        if check ctx tm' (Nat $$ [])
+        then Nat $$ []
+        else raise TypeError
+    | LamV (x, tm) ->
+        let x_typ = get_typ ctx x in
+        let tm_typ = infer (update ctx x x_typ) tm in
+        Pi $$ [x_typ; x ^^ tm_typ]
+    | PiV (_, _, _) -> Star $$ []
+    | _ -> failwith "TODO"
+
+end
 
     (* | NatV
 | ZeroV
@@ -39,7 +64,3 @@ module Typechecker = struct
 | LamV of Variable.t * LamPiTerm.t
 | LetV of Variable.t * LamPiTerm.t * LamPiTerm.t
  *)
-
-  let check : context -> term -> bool = failwith "todo"
-  let infer : context -> term -> term = failwith "todo"
-end
