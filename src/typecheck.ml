@@ -33,6 +33,8 @@ module Typechecker = struct
 
   exception TypeError
 
+  let (-->>) x e = LamPiTerm.subst e x
+
   let rec check _ tm1 tm2 : bool =
     match (abt_to_view tm1, abt_to_view tm2) with
     (* | LamV (x, tm1'), PiV (dom, y, tm2') -> failwith "Typecheck TODO" *)
@@ -49,9 +51,22 @@ module Typechecker = struct
         let x_typ = get_typ ctx x in
         let tm_typ = infer (update ctx x x_typ) tm in
         Pi $$ [x_typ; x ^^ tm_typ]
+    | AppV (tm1, tm2) -> failwith "TODO"
     | PiV (_, _, _) -> Star $$ []
     | _ -> failwith "TODO"
+  and infer_pi ctx tm = failwith "TODO"
 
+  let rec normalize (ctx : context) tm =
+    match abt_to_view tm with
+    | AppV (tm1, tm2) ->
+        let tm2' = normalize ctx tm2 in
+          begin match abt_to_view (normalize ctx tm1) with
+          | LamV (x, tm) ->
+              let tm' = normalize ctx tm in
+                normalize ctx ((x -->> tm2') tm')
+          | _ -> failwith "TODO"
+          end
+    | _ -> failwith "TODO"
 end
 
     (* | NatV
