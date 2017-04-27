@@ -20,5 +20,3 @@ true: annot, bin_annot
 "src/main.byte": pkg_abt
 <src/*.ml{,i,y}>: pkg_abt
 # OASIS_STOP
-"lib/ocaml-abt": include
-true: color(always)
