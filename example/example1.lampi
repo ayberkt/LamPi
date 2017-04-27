@@ -1,5 +1,7 @@
 Definition foo : forall (A:Set) , A -> A -> A := \y -> \x -> y;
 
 Definition zero : Nat := Z;
-Definition one  : Nat := S (S Z);
-Definition two  : Nat := S (S (S Z));
+Definition one  : Nat := S Z;
+
+Definition five  : Nat :=
+  let two = S (S Z) in let four = S (S two) in S four;

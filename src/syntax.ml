@@ -86,7 +86,10 @@ module ParseToABT = struct
         Pi $$ [termToABT ctx tm1; x1 ^^ termToABT ctx' tm2]
     | TmAnn (tm1, tm2) ->
         Ann $$ [termToABT ctx tm1; termToABT ctx tm2]
-    | TmLet (tm1, tm2) -> Let $$ [termToABT ctx tm1; termToABT ctx tm2]
+    | TmLet (Ident x, tm1, tm2) ->
+        let x1 = newvar x in
+        let ctx' = add ctx x x1 in
+        Let $$ [termToABT ctx' tm1; x1 ^^ termToABT ctx' tm2]
 
     let parse_program : program -> LamPiTerm.t list =
       fun (PDecls decls) ->

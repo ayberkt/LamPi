@@ -10,7 +10,7 @@ TmSet.    Term8 ::= "Set";
 TmNat.    Term8 ::= "Nat";
 TmSucc.   Term7 ::= "S" Term8;
 TmApp.    Term6 ::= Term6 Term7;
-TmLet.    Term5 ::= "let" Term5 "in" Term6;
+TmLet.    Term5 ::= "let" Ident "=" Term6 "in" Term5;
 TmAbs.    Term4 ::= "\\" Ident "->" Term4;
 TmArrow.  Term3 ::= Term3 "->" Term4;
 TmForall. Term2 ::= "forall" "(" Ident ":" Term2 ")" "," Term3;
