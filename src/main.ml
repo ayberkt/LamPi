@@ -62,6 +62,10 @@ let run = function
       | ParseToABT.UnboundVariable x ->
           printf "%sError:%s Unbound value %s\n" color_red color_reset x;
           exit 1
+      | BNFC_Util.Parse_error (x, y) ->
+          printf "Parse error between line %d char %d to line %d char %d\n"
+          x.pos_lnum x.pos_cnum x.pos_lnum y.pos_cnum;
+          exit 1
     in
       printf "Parsing the file %s...\n\n" file_name;
       iter ~f:print_ABT (abts)

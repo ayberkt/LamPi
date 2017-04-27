@@ -1,4 +1,4 @@
-Definition foo : forall (A : Set) , A -> A -> A := \y -> \x -> y;
+Definition foo : forall (A:Set) , A -> A -> A := \y -> \x -> y;
 
 Definition zero : Nat := Z;
 Definition one  : Nat := S (S Z);

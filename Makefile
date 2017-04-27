@@ -10,14 +10,14 @@ bnfc:
 	bnfc --ocaml src/LamPi.bnfc -o src
 
 bnfc-clean:
-	rm -rf AbsLamPi.ml
-	rm -rf BNFC_Util.ml
-	rm -rf LexLamPi.mll
-	rm -rf ParLamPi.mly
-	rm -rf PrintLamPi.ml
-	rm -rf ShowLamPi.ml
-	rm -rf SkelLamPi.ml
-	rm -rf TestLamPi.ml
+	rm -rf src/AbsLamPi.ml
+	rm -rf src/BNFC_Util.ml
+	rm -rf src/LexLamPi.mll
+	rm -rf src/ParLamPi.mly
+	rm -rf src/PrintLamPi.ml
+	rm -rf src/ShowLamPi.ml
+	rm -rf src/SkelLamPi.ml
+	rm -rf src/TestLamPi.ml
 
 
 docs:
