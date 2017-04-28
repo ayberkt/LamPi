@@ -51,10 +51,10 @@ module Typechecker = struct
         let x_typ = get_typ ctx x in
         let tm_typ = infer (update ctx x x_typ) tm in
         Pi $$ [x_typ; x ^^ tm_typ]
-    | AppV (tm1, tm2) -> failwith "TODO"
+    | AppV (_, _) -> failwith "TODO"
     | PiV (_, _, _) -> Star $$ []
     | _ -> failwith "TODO"
-  and infer_pi ctx tm = failwith "TODO"
+  and infer_pi _ _ = failwith "TODO"
 
   type result = Step of term | Val
 
@@ -95,8 +95,8 @@ module Typechecker = struct
         | Step tm2' -> Step (App $$ [tm1; tm2'])
         end
     | _ -> raise InternalError
-  and step_pi ctx = failwith "TODO step_pi"
-  and step_let ctx = failwith "TODO step_let"
+  and step_pi _ = failwith "TODO step_pi"
+  and step_let _ = failwith "TODO step_let"
 
 end
 
