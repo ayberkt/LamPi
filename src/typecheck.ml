@@ -62,14 +62,14 @@ module Typechecker = struct
 
   let rec step (ctx : context) tmvw : result =
     match abt_to_view tmvw with
-      | AnnV (_, _) -> failwith "Annotation should not occcur in step."
-      | NatV  -> Val
-      | StarV -> Val
-      | LamV (_, _) -> Val
-      | PiV (_, _, _)     as tm -> step_pi ctx tm
-      | LetV (_, _, _)    as tm -> step_let ctx tm
-      | (ZeroV | SuccV _) as tm -> step_nat ctx tm
-      | AppV (_, _)       as tm -> step_app ctx tm
+    | AnnV (_, _) -> failwith "Annotation should not occcur in step."
+    | NatV  -> Val
+    | StarV -> Val
+    | LamV (_, _) -> Val
+    | PiV (_, _, _)     as tm -> step_pi ctx tm
+    | LetV (_, _, _)    as tm -> step_let ctx tm
+    | (ZeroV | SuccV _) as tm -> step_nat ctx tm
+    | AppV (_, _)       as tm -> step_app ctx tm
   and step_nat ctx =
     function
     | ZeroV -> Val
