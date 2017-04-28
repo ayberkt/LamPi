@@ -2,6 +2,7 @@ open Syntax
 open LamPiTerm
 open LamPiView
 module CL = Core_kernel.Core_list
+open Core_kernel.Core_printf
 
 module Typechecker = struct
   type term    = LamPiTerm.t
@@ -25,40 +26,22 @@ module Typechecker = struct
 
 
   exception UnboundVariable
+  exception InternalError
 
   let get_typ ctx x =
     match find ctx x with
       | Some t -> t
       | None -> raise UnboundVariable
 
-  exception TypeError
+  exception TypeError of string
+
+  let errty s = raise (TypeError s)
 
   let (-->>) x e = LamPiTerm.subst e x
 
-  let rec check _ tm1 tm2 : bool =
-    match (abt_to_view tm1, abt_to_view tm2) with
-    (* | LamV (x, tm1'), PiV (dom, y, tm2') -> failwith "Typecheck TODO" *)
-    (* | AppV (fn, arg), tm2' -> failwith "Typecheck TODO" *)
-    | _ -> failwith "Typecheck TODO"
-  and infer ctx tm =
-    match abt_to_view tm with
-    | ZeroV -> Nat $$ []
-    | SuccV tm' ->
-        if check ctx tm' (Nat $$ [])
-        then Nat $$ []
-        else raise TypeError
-    | LamV (x, tm) ->
-        let x_typ = get_typ ctx x in
-        let tm_typ = infer (update ctx x x_typ) tm in
-        Pi $$ [x_typ; x ^^ tm_typ]
-    | AppV (_, _) -> failwith "TODO"
-    | PiV (_, _, _) -> Star $$ []
-    | _ -> failwith "TODO"
-  and infer_pi _ _ = failwith "TODO"
+  let (<==>) tm1 tm2 = aequiv (tm1, tm2)
 
   type result = Step of term | Val
-
-  exception InternalError
 
   let rec step (ctx : context) tmvw : result =
     match abt_to_view tmvw with
@@ -95,8 +78,56 @@ module Typechecker = struct
         | Step tm2' -> Step (App $$ [tm1; tm2'])
         end
     | _ -> raise InternalError
-  and step_pi _ = failwith "TODO step_pi"
+  and step_pi ctx tm =
+    match tm with
+    | PiV (x, tm1, tm2) ->
+        begin match step ctx tm1 with
+        | Step tm1' -> Step (Pi $$ [tm1'; x ^^ tm2])
+        | Val ->
+            begin match step (update ctx x tm1) tm2 with
+            | Step tm2' -> Step (Pi $$ [tm1; x ^^ tm2'])
+            | Val -> Val
+            end
+        end
+    | _ -> raise InternalError
   and step_let _ = failwith "TODO step_let"
+
+  let rec normalize ctx tm =
+    match step ctx tm with
+    | Val -> tm
+    | Step tm' -> normalize ctx tm'
+
+  let rec check ctx tm1 tm2 : bool =
+    match (abt_to_view tm1, abt_to_view tm2) with
+    | ZeroV, NatV -> true
+    | SuccV tm, NatV -> check ctx tm (Nat $$ [])
+    | _ -> failwith "Check TODO"
+  and infer ctx tm =
+    match abt_to_view tm with
+    | ZeroV -> Nat $$ []
+    | SuccV tm' when check ctx tm' (Nat $$ []) -> Nat $$ []
+    | SuccV tm' -> errty (sprintf "%s is expected to be a nat"  (to_string tm'))
+    | LamV (x, tm) ->
+        let xty = get_typ ctx x in
+        let tmty = infer (update ctx x xty) tm in
+        Pi $$ [xty; x ^^ tmty]
+    | AppV (tm1, tm2) ->
+        let ty1 = infer_pi ctx tm1 in
+          begin match abt_to_view ty1 with
+          | PiV (x, s, t) when check ctx tm2 s -> (x -->> tm2) t
+          | PiV (_, s, t) ->
+              errty (sprintf "%s and %s not equal" (to_string s) (to_string t))
+          | _ -> errty "TODO: find message"
+          end
+    | (PiV(_, _, _) | NatV | StarV) -> Star $$ []
+    | AnnV (tm, ty) when check ctx tm ty -> ty
+    | AnnV (tm, ty) ->
+        errty (sprintf "%s does not have type %s" (to_string tm) (to_string ty))
+    | LetV (x, tm1, tm2) -> infer (update ctx x tm1) tm2
+  and infer_pi ctx tm =
+    match abt_to_view (normalize ctx tm) with
+    | PiV (x, tm1, tm2) -> Pi $$ [tm1; x ^^ tm2]
+    | _ -> raise InternalError
 
 end
 
