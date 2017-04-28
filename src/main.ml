@@ -26,7 +26,6 @@ let pink s = color_pink ^ s ^ color_reset;;
 let error_msg (x : Lexing.position) (_ : Lexing.position) : string =
   (red "Syntax error") ^ " at line " ^ (string_of_int x.pos_lnum) ^ ".\n"
 
-
 let parse_line s = ParLamPi.pProgram LexLamPi.token (from_string s)
 
 let parse_file c = ParLamPi.pProgram LexLamPi.token (from_channel c)

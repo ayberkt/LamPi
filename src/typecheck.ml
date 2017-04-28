@@ -56,17 +56,48 @@ module Typechecker = struct
     | _ -> failwith "TODO"
   and infer_pi ctx tm = failwith "TODO"
 
-  let rec normalize (ctx : context) tm =
-    match abt_to_view tm with
+  type result = Step of term | Val
+
+  exception InternalError
+
+  let rec step (ctx : context) tmvw : result =
+    match abt_to_view tmvw with
+      | AnnV (_, _) -> failwith "Annotation should not occcur in step."
+      | NatV  -> Val
+      | StarV -> Val
+      | LamV (_, _) -> Val
+      | PiV (_, _, _)     as tm -> step_pi ctx tm
+      | LetV (_, _, _)    as tm -> step_let ctx tm
+      | (ZeroV | SuccV _) as tm -> step_nat ctx tm
+      | AppV (_, _)       as tm -> step_app ctx tm
+  and step_nat ctx =
+    function
+    | ZeroV -> Val
+    | SuccV tm ->
+        begin match step ctx tm with
+        | Val -> Val
+        | Step tm' -> Step (Succ $$ [tm'])
+        end
+    | _ -> raise InternalError
+  and step_app ctx =
+    function
     | AppV (tm1, tm2) ->
-        let tm2' = normalize ctx tm2 in
-          begin match abt_to_view (normalize ctx tm1) with
-          | LamV (x, tm) ->
-              let tm' = normalize ctx tm in
-                normalize ctx ((x -->> tm2') tm')
-          | _ -> failwith "TODO"
-          end
-    | _ -> failwith "TODO"
+        begin match step ctx tm2 with
+        | Val ->
+            begin match step ctx tm1 with
+            | Val ->
+                begin match abt_to_view tm1 with
+                | LamV (x, body) -> Step ((x -->> tm2) body)
+                | _ -> raise InternalError
+                end
+            | Step tm1' -> Step (App $$ [tm1'; tm2])
+            end
+        | Step tm2' -> Step (App $$ [tm1; tm2'])
+        end
+    | _ -> raise InternalError
+  and step_pi ctx = failwith "TODO step_pi"
+  and step_let ctx = failwith "TODO step_let"
+
 end
 
     (* | NatV
