@@ -51,6 +51,14 @@ let repl () =
 
 type mode = REPL | RunFile of string
 
+let check_term tm : unit =
+    let open Typechecker in
+    let showtm = LamPiTerm.to_string in
+    try
+      let ty = infer [] tm in
+      Printf.printf "%s has type %s.\n" (showtm tm) (showtm ty)
+    with
+    | TypeError s -> Printf.printf "%s\n" s
 
 let run = function
 | REPL -> repl ()
@@ -68,7 +76,7 @@ let run = function
           exit 1
     in
       printf "Parsing the file %s...\n\n" file_name;
-      iter ~f:print_ABT (abts)
+      iter ~f:check_term abts
 ;;
 
 let main =

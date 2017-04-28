@@ -125,16 +125,16 @@ module LamPiView = struct
     | Pi, [tm1; tm2'] ->
         begin match out tm2' with
         | AbsView (x, tm2) -> PiV (x, tm1, tm2)
-        | _ -> raise CannotConvert
+        | _ -> failwith "Cannot convert 1"
         end
     | App, [tm1; tm2] -> AppV (tm1, tm2)
     | Lam, [tm] ->
         begin match out tm with
-        | VarView x -> LamV (x, tm)
-        | _ -> raise CannotConvert
+        | AbsView (x, tm') -> LamV (x, tm')
+        | _ -> failwith "Cannot convert 2"
         end
     | Let, _ -> failwith "TODO"
-    | _, _ -> raise CannotConvert
+    | _, _ -> failwith "Cannot convert 3"
 
   let abt_to_view (a : LamPiTerm.t) =
     match out a with
